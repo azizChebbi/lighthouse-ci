@@ -274,13 +274,13 @@ async function runGithubStatusCheck(options, targetUrlMap) {
     /** @type {Array<LH.Result>} */
     const lhrs = loadSavedLHRs().map(lhr => JSON.parse(lhr));
     /** @type {Array<Array<[LH.Result, LH.Result]>>} */
-    const lhrsByUrl = _.groupBy(lhrs, lhr => lhr.finalUrl).map(lhrs => lhrs.map(lhr => [lhr, lhr]));
+    const lhrsByUrl = _.groupBy(lhrs, lhr => lhr.finalDisplayedUrl).map(lhrs => lhrs.map(lhr => [lhr, lhr]));
     const representativeLhrs = computeRepresentativeRuns(lhrsByUrl);
 
     if (!representativeLhrs.length) return print('No LHRs for status check, skipping.\n');
 
     for (const lhr of representativeLhrs) {
-      const rawUrl = lhr.finalUrl;
+      const rawUrl = lhr.finalDisplayedUrl;
       const urlLabel = getUrlLabelForGithub(rawUrl, options);
       const state = 'success';
       const context = getGitHubContext(urlLabel, options);
@@ -434,7 +434,7 @@ async function runLHCITarget(options) {
 
   for (const lhr of lhrs) {
     const parsedLHR = JSON.parse(lhr);
-    const url = getUrlForLhciTarget(parsedLHR.finalUrl, options);
+    const url = getUrlForLhciTarget(parsedLHR.finalDisplayedUrl, options);
     const run = await api.createRun({
       projectId: project.id,
       buildId: build.id,
@@ -444,7 +444,7 @@ async function runLHCITarget(options) {
     });
 
     buildViewUrl.searchParams.set('compareUrl', url);
-    targetUrlMap.set(parsedLHR.finalUrl, buildViewUrl.href);
+    targetUrlMap.set(parsedLHR.finalDisplayedUrl, buildViewUrl.href);
     print(`Saved LHR to ${options.serverBaseUrl} (${run.id})\n`);
   }
 
@@ -465,14 +465,14 @@ async function runTemporaryPublicStorageTarget(options) {
   /** @type {Array<LH.Result>} */
   const lhrs = loadSavedLHRs().map(lhr => JSON.parse(lhr));
   /** @type {Array<Array<[LH.Result, LH.Result]>>} */
-  const lhrsByUrl = _.groupBy(lhrs, lhr => lhr.finalUrl).map(lhrs => lhrs.map(lhr => [lhr, lhr]));
+  const lhrsByUrl = _.groupBy(lhrs, lhr => lhr.finalDisplayedUrl).map(lhrs => lhrs.map(lhr => [lhr, lhr]));
   const representativeLhrs = computeRepresentativeRuns(lhrsByUrl);
   const targetUrlMap = new Map();
 
   const previousUrlMap = await getPreviousUrlMap(options);
 
   for (const lhr of representativeLhrs) {
-    print(`Uploading median LHR of ${lhr.finalUrl}...`);
+    print(`Uploading median LHR of ${lhr.finalDisplayedUrl}...`);
 
     try {
       const response = await fetch(TEMPORARY_PUBLIC_STORAGE_URL, {
@@ -483,10 +483,10 @@ async function runTemporaryPublicStorageTarget(options) {
 
       const {success, url} = await response.json();
       if (success && url) {
-        const urlReplaced = replaceUrlPatterns(lhr.finalUrl, options.urlReplacementPatterns);
+        const urlReplaced = replaceUrlPatterns(lhr.finalDisplayedUrl, options.urlReplacementPatterns);
         const urlToLinkTo = buildTemporaryStorageLink(url, urlReplaced, previousUrlMap);
         print(`success!\nOpen the report at ${urlToLinkTo}\n`);
-        targetUrlMap.set(lhr.finalUrl, url);
+        targetUrlMap.set(lhr.finalDisplayedUrl, url);
       } else {
         print(`failed!\n`);
       }
