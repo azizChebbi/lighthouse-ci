@@ -54,7 +54,7 @@ async function runCommand(options) {
   if (budgetsFile) options = await convertBudgetsToAssertions(readBudgets(budgetsFile));
 
   const lhrs = loadSavedLHRs().map(json => JSON.parse(json));
-  const uniqueUrls = new Set(lhrs.map(lhr => lhr.finalUrl));
+  const uniqueUrls = new Set(lhrs.map(lhr => lhr.finalDisplayedUrl));
   const allResults = getAllAssertionResults(options, lhrs);
   const groupedResults = _.groupBy(allResults, result => result.url);
 

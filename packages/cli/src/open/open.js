@@ -29,7 +29,7 @@ async function runCommand(options) {
   /** @type {Array<LH.Result>} */
   const lhrs = loadSavedLHRs().map(lhr => JSON.parse(lhr));
   /** @type {Array<Array<[LH.Result, LH.Result]>>} */
-  const groupedByUrl = _.groupBy(lhrs, lhr => lhr.finalUrl).map(lhrs =>
+  const groupedByUrl = _.groupBy(lhrs, lhr => lhr.finalDisplayedUrl).map(lhrs =>
     lhrs.map(lhr => [lhr, lhr])
   );
   const representativeLhrs = computeRepresentativeRuns(groupedByUrl);
@@ -41,9 +41,9 @@ async function runCommand(options) {
   const targetUrls = typeof options.url === 'string' ? [options.url] : options.url || [];
 
   for (const lhr of representativeLhrs) {
-    if (targetUrls.length && !targetUrls.includes(lhr.finalUrl)) continue;
+    if (targetUrls.length && !targetUrls.includes(lhr.finalDisplayedUrl)) continue;
 
-    process.stdout.write(`Opening median report for ${lhr.finalUrl}...\n`);
+    process.stdout.write(`Opening median report for ${lhr.finalDisplayedUrl}...\n`);
     const tmpFile = tmp.fileSync({postfix: '.html'});
     fs.writeFileSync(tmpFile.name, await getHTMLReportForLHR(lhr));
     await open(tmpFile.name);
