@@ -1,5 +1,5 @@
 {
-  "name": "lighthouseci-cli",
+  "name": "@expensya-lh/cli",
   "version": "0.2.0",
   "description": "Lighthouse CI ",
   "license": "Apache-2.0",
