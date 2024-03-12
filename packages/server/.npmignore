@@ -3,3 +3,5 @@
 .lighthouseci/
 .cache/
 test/
+!dist/
+!storybook-static/

@@ -1,7 +1,7 @@
 {
   "name": "@expensya-lh/server",
   "main": "./src/server.js",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -17,8 +17,7 @@
     "build:watch": "node ../../scripts/build-app.js watch ./src/ui/index.html ./dist /app/",
     "build:source-map-explorer": "npm run clean && npm run build && ../../scripts/source-map-explorer.sh",
     "build:storybook": "build-storybook",
-    "start:storybook": "start-storybook -p 6006",
-    "prepublish": "npm run build"
+    "start:storybook": "start-storybook -p 6006"
   },
   "dependencies": {
     "@lhci/utils": "0.1.0",
@@ -36,15 +35,15 @@
     "uuid": "^8.3.1"
   },
   "devDependencies": {
+    "@fontsource/material-icons": "^4.4.5",
+    "@fontsource/roboto": "^4.4.5",
+    "@fontsource/roboto-mono": "^4.4.5",
     "clsx": "^1.0.4",
     "d3": "^5.15.0",
     "plotly.js": "^1.48.3",
     "preact": "^10.0.1",
     "preact-async-route": "^2.2.1",
-    "preact-router": "^3.1.0",
-    "@fontsource/material-icons": "^4.4.5",
-    "@fontsource/roboto": "^4.4.5",
-    "@fontsource/roboto-mono": "^4.4.5"
+    "preact-router": "^3.1.0"
   },
   "alias": {
     "isomorphic-fetch": "clsx"
