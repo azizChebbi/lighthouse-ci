@@ -6,6 +6,10 @@
         "storageMethod": "sql",
         "sqlDialect": "sqlite",
         "sqlDatabasePath": "/data/lhci.db"
+      },
+      "basicAuth": {
+        "username": "Expensya-lh",
+        "password": "Expensya!Medius11"
       }
     }
   }
