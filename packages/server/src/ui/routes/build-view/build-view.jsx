@@ -28,6 +28,7 @@ import {DocumentTitle} from '../../components/document-title';
 import {LoadingSpinner} from '../../components/loading-spinner';
 import {LhrComparison} from './lhr-comparison.jsx';
 import {Dropdown} from '../../components/dropdown';
+import {BuildUrlList} from './build-url-list';
 
 /**
  * @param {{compareUrl?: string, runs: Array<LHCI.ServerCommand.Run>}} props
@@ -160,6 +161,7 @@ const BuildView_ = props => {
         <Fragment />
       )}
       {(lhrError && <h1>Error parsing LHR ({lhrError.stack})</h1>) || <Fragment />}
+      <BuildUrlList compareRuns={compareRuns} baseRuns={baseRuns} activeUrl={baseUrl} />
       <LhrComparison
         lhr={lhr}
         baseLhr={baseLhr}

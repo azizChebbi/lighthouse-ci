@@ -9,7 +9,6 @@
 }
 
 .lhr-comparison__scores-and-dropdowns {
-  height: 260px;
   width: calc(100% + 2 * var(--base-spacing));
   padding: var(--base-spacing);
   margin: calc(-1 * var(--base-spacing));

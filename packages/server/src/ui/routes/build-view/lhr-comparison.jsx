@@ -119,7 +119,7 @@ const LhrComparisonScoresAndUrl = props => {
     <div className="lhr-comparison__scores-and-dropdowns">
       <div className="container">
         <div className="lhr-comparison__dropdowns">
-          {props.hookElements.dropdowns}
+          {/* {props.hookElements.dropdowns} */}
           <Dropdown
             label="Threshold"
             value={props.percentAbsoluteDeltaThreshold.toString()}
@@ -135,7 +135,7 @@ const LhrComparisonScoresAndUrl = props => {
             ]}
           />
         </div>
-        {props.selectedAuditId ? <Fragment /> : <LhrComparisonScores {...props} />}
+        {/* {props.selectedAuditId ? <Fragment /> : <LhrComparisonScores {...props} />} */}
       </div>
     </div>
   );
