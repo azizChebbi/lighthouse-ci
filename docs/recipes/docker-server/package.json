@@ -5,8 +5,8 @@
     "start": "lhci server --config=./lighthouserc.json"
   },
   "dependencies": {
-    "@expensya-lh/cli": "^0.2.0",
-    "@expensya-lh/server": "^1.1.0",
+    "@expensya-lh/cli": "latest",
+    "@expensya-lh/server": "latest",
     "mysql2": "^2.1.0",
     "pg": "^8.2.1",
     "pg-hstore": "^2.3.3",
