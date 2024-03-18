@@ -17,6 +17,7 @@ const {
 const assertCmd = require('./assert/assert.js');
 const autorunCmd = require('./autorun/autorun.js');
 const healthcheckCmd = require('./healthcheck/healthcheck.js');
+const compareCmd = require('./compare/compare.js');
 const uploadCmd = require('./upload/upload.js');
 const collectCmd = require('./collect/collect.js');
 const serverCmd = require('./server/server.js');
@@ -78,6 +79,9 @@ async function run() {
     .command('healthcheck', 'Run diagnostics to ensure a valid configuration', commandYargs =>
       healthcheckCmd.buildCommand(commandYargs)
     )
+    .command('compare', 'Run comparison to detect score regressions', commandYargs =>
+      compareCmd.buildCommand(commandYargs)
+    )
     .command('open', 'Opens the HTML reports of collected runs', commandYargs =>
       openCmd.buildCommand(commandYargs)
     )
@@ -110,6 +114,9 @@ async function run() {
       break;
     case 'healthcheck':
       await healthcheckCmd.runCommand(argv);
+      break;
+    case 'compare':
+      await compareCmd.runCommand(mergeInCommandSpecificEnvironments(argv, 'upload'));
       break;
     case 'server': {
       const {port} = await serverCmd.runCommand(argv);
