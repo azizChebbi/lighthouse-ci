@@ -189,6 +189,25 @@ function createRouter(context) {
     })
   );
 
+  // GET /projects/<id>/compareRuns
+  router.get(
+    '/:projectId/compareRuns',
+    handleAsyncError(async (req, res) => {
+      if (typeof req.query.representative === 'string') {
+        req.query.representative = req.query.representative === 'true';
+      }
+
+      const buildId = await context.storageMethod.findBuildIdByCommitMessage(
+        req.params.projectId,
+        'Backend Auto Version'
+      );
+      if (!buildId) return res.sendStatus(404);
+
+      const runs = await context.storageMethod.getRuns(req.params.projectId, buildId, req.query);
+      res.json(runs);
+    })
+  );
+
   // POST /projects/<id>/builds/<id>/runs
   router.post(
     '/:projectId/builds/:buildId/runs',
