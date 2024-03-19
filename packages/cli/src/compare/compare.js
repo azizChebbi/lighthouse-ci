@@ -1,6 +1,5 @@
 const {loadSavedLHRs} = require('@lhci/utils/src/saved-reports');
-const {getUrlForLhciTarget} = require('../upload/upload');
-const ApiClient = require('@lhci/utils/src/api-client');
+const ApiClient = require('@expensya-lh/utils/src/api-client');
 
 /**
  * @param {import('yargs').Argv} yargs
@@ -34,11 +33,42 @@ function buildCommand(yargs) {
       description:
         '[lhci only] The password to use on a server protected with HTTP Basic Authentication.',
     },
+    onlyCategories: {
+      type: 'array',
+      description: '[lhci only] Only run Lighthouse for these categories.',
+    },
   });
 }
 
 /**
- * @param {LHCI.UploadCommand.Options} options
+ * @param {LH.Result} localLHR
+ * @param {LH.Result} compareLHR
+ * @return {boolean}
+ */
+function checkForRegressions(localLHR, compareLHR) {
+  let hasRegression = false;
+  Object.keys(localLHR.categories).forEach(category => {
+    const localScore = localLHR.categories[category].score;
+    const compareScore = compareLHR.categories[category].score;
+    if (localScore > compareScore) {
+      hasRegression = true;
+      const scoreDifference = Math.floor(Math.abs(compareScore - localScore) * 100);
+      const bold = '\x1b[1m'; // Bold
+      const red = '\x1b[31m'; // Red
+      const reset = '\x1b[0m'; // Reset formatting
+
+      process.stdout.write(
+        `${'❌'} regression for \x1b]8;;${localLHR.requestedUrl}\x1b\\${bold}${
+          localLHR.requestedUrl
+        }${reset}\x1b]8;;\x1b\\ in category ${bold}${category}${reset} by ${red}${scoreDifference}${reset} \n`
+      );
+    }
+  });
+  return hasRegression;
+}
+
+/**
+ * @param {LHCI.CompareCommand.Options} options
  * @return {Promise<void>}
  */
 async function runCommand(options) {
@@ -49,23 +79,33 @@ async function runCommand(options) {
   if (!project) {
     throw new Error('Could not find active project with provided token');
   }
-  process.stdout.write(`Project: ${JSON.stringify(project)} \n`);
 
-  const lhrs = loadSavedLHRs();
-  for (const lhr of lhrs) {
-    const parsedLHR = JSON.parse(lhr);
-    const url = getUrlForLhciTarget(parsedLHR.finalDisplayedUrl, options);
-    const run = {
-      url,
-      lhr: parsedLHR,
-    };
-    // display the run:
-    process.stdout.write(`Run: ${run.url} \n`);
+  /**
+   * @type {Array<any>}
+   */
+  const compareRuns = await api.findCompareRuns(project.id);
+
+  if (!compareRuns) {
+    throw new Error('Could not find compare runs for the project');
   }
 
-  // get the runs from the server
-  // compare the runs
-  process.stdout.write('Compare command working!\n');
+  /** @type {Array<LH.Result>} */
+  const compareLHRs = compareRuns.map(run => JSON.parse(run.lhr));
+  /** @type {Array<LH.Result>} */
+  const localLHRs = loadSavedLHRs().map(JSON.parse);
+
+  let hasRegression = false;
+  for (const localLHR of localLHRs) {
+    for (const compareLHR of compareLHRs) {
+      if (localLHR.requestedUrl === compareLHR.requestedUrl) {
+        if (checkForRegressions(localLHR, compareLHR)) {
+          hasRegression = true;
+        }
+      }
+    }
+  }
+
+  process.stdout.write(`${hasRegression ? 'Comparison done.' : 'No regression found.'}\n`);
 }
 
 module.exports = {buildCommand, runCommand};
