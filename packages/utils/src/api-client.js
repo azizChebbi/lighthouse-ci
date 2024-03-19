@@ -212,6 +212,14 @@ class ApiClient {
   }
 
   /**
+   * @param {string} projectId
+   * @return {Promise<LHCI.ServerCommand.Project | undefined>}
+   */
+  async findCompareRuns(projectId) {
+    return this._convert404ToUndefined(this._get(`/v1/projects/${projectId}/compareRuns`));
+  }
+
+  /**
    * @param {string} slug
    * @return {Promise<LHCI.ServerCommand.Project | undefined>}
    */
