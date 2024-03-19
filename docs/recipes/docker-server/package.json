@@ -2,7 +2,7 @@
   "name": "lhci",
   "version": "0.0.0",
   "scripts": {
-    "start": "lhci server --config=./lighthouserc.json"
+    "start": "lhci server --config=./lighthouserc.json --basicAuth.password=ZnMmw4kJ59SPt#%=zU-~"
   },
   "dependencies": {
     "@expensya-lh/cli": "latest",
