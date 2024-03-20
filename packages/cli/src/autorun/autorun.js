@@ -133,7 +133,7 @@ async function runCommand(options) {
   const collectStatus = runChildCommand('collect', [...defaultFlags, ...collectArgs]).status;
   if (collectStatus !== 0) process.exit(collectStatus);
 
-  const compareStatus = runChildCommand('compare').status;
+  const compareStatus = runChildCommand('compare', defaultFlags).status;
   if (compareStatus !== 0) process.exit(compareStatus);
 
   // We'll run assertions if there's assert options OR they haven't configured anything to do with the results
