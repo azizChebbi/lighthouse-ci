@@ -50,7 +50,7 @@ function checkForRegressions(localLHR, compareLHR) {
   Object.keys(localLHR.categories).forEach(category => {
     const localScore = localLHR.categories[category].score;
     const compareScore = compareLHR.categories[category].score;
-    if (localScore > compareScore) {
+    if (localScore < compareScore) {
       hasRegression = true;
       const scoreDifference = Math.floor(Math.abs(compareScore - localScore) * 100);
       const bold = '\x1b[1m'; // Bold
@@ -105,7 +105,9 @@ async function runCommand(options) {
     }
   }
 
-  process.stdout.write(`${hasRegression ? 'Comparison done.' : 'No regression found.'}\n`);
+  process.stdout.write(
+    `${hasRegression ? 'Comparison done.' : 'Comparison done, no regression found.'}\n`
+  );
 }
 
 module.exports = {buildCommand, runCommand};

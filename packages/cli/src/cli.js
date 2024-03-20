@@ -44,8 +44,8 @@ function createYargsConfigArguments() {
  *
  * e.g. LHCI_UPLOAD__SERVER_BASE_URL=http://example.com -> `{upload: {serverBaseUrl: 'http://example.com'}}
  * @see https://github.com/GoogleChrome/lighthouse-ci/issues/480
- * @param {LHCI.YargsOptions & {collect?: LHCI.CollectCommand.Options; assert?: LHCI.AssertCommand.Options; upload?: LHCI.UploadCommand.Options}} argv
- * @param {'collect'|'assert'|'upload'} command
+ * @param {LHCI.YargsOptions & {collect?: LHCI.CollectCommand.Options; assert?: LHCI.AssertCommand.Options; upload?: LHCI.UploadCommand.Options; compare?:LHCI.CompareCommand.Options}} argv
+ * @param {'collect'|'assert'|'upload'|'compare'} command
  * @return {*}
  */
 function mergeInCommandSpecificEnvironments(argv, command) {
