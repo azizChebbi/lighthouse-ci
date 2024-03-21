@@ -1,5 +1,6 @@
 const {loadSavedLHRs} = require('@lhci/utils/src/saved-reports');
 const ApiClient = require('@expensya-lh/utils/src/api-client');
+const chalk = require('chalk');
 
 /**
  * @param {import('yargs').Argv} yargs
@@ -48,19 +49,16 @@ function buildCommand(yargs) {
 function checkForRegressions(localLHR, compareLHR) {
   let hasRegression = false;
   Object.keys(localLHR.categories).forEach(category => {
-    const localScore = localLHR.categories[category].score;
-    const compareScore = compareLHR.categories[category].score;
+    const localScore = Math.floor(localLHR.categories[category].score * 100);
+    const compareScore = Math.floor(compareLHR.categories[category].score * 100);
     if (localScore < compareScore) {
       hasRegression = true;
-      const scoreDifference = Math.floor(Math.abs(compareScore - localScore) * 100);
-      const bold = '\x1b[1m'; // Bold
-      const red = '\x1b[31m'; // Red
-      const reset = '\x1b[0m'; // Reset formatting
-
-      process.stdout.write(
-        `${'❌'} regression for \x1b]8;;${localLHR.requestedUrl}\x1b\\${bold}${
+      console.log(
+        `${'❌'} regression for ${chalk.bold.underline.blue(
           localLHR.requestedUrl
-        }${reset}\x1b]8;;\x1b\\ in category ${bold}${category}${reset} by ${red}${scoreDifference}${reset} \n`
+        )} in category ${chalk.bold.underline(category)} by ${chalk.red(
+          compareScore - localScore
+        )} (${compareScore} -> ${localScore})`
       );
     }
   });
