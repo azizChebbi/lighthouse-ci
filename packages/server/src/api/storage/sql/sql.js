@@ -614,16 +614,14 @@ class SqlStorageMethod {
 
   /**
    * @param {string} projectId
-   * @param {string} commitMessage
    * @return {Promise<string | undefined>}
    */
-  async findBuildIdByCommitMessage(projectId, commitMessage) {
+  async findLatestBuildId(projectId) {
     const {buildModel} = this._sql();
     const build = await buildModel.findOne({
       attributes: ['id'],
       where: {
         projectId,
-        commitMessage,
       },
       order: [['createdAt', 'DESC']], // Order by createdAt in descending order
     });

@@ -193,10 +193,9 @@ class StorageMethod {
 
   /**
    * @param {string} projectId
-   * @param {string} commitMessage
    * @return {Promise<string | undefined>}
    */
-  async findBuildIdByCommitMessage(projectId, commitMessage) {
+  async findLatestBuildId(projectId) {
     throw new Error('Unimplemented');
   }
 

@@ -197,10 +197,7 @@ function createRouter(context) {
         req.query.representative = req.query.representative === 'true';
       }
 
-      const buildId = await context.storageMethod.findBuildIdByCommitMessage(
-        req.params.projectId,
-        'Backend Auto Version'
-      );
+      const buildId = await context.storageMethod.findLatestBuildId(req.params.projectId);
       if (!buildId) return res.sendStatus(404);
 
       const runs = await context.storageMethod.getRuns(req.params.projectId, buildId, req.query);
