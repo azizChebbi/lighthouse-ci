@@ -8,8 +8,9 @@ import './build-url-list.css';
 export const BuildUrlList = props => {
   const {compareRuns, baseRuns, activeUrl} = props;
   const compareUrlsSet = new Set(compareRuns.map(run => run.url));
+  const baseUrls = Array.from(new Set(baseRuns.map(run => run.url)));
   // Getting the urls that exists in the both runs.
-  const intersectingUrls = baseRuns.map(run => run.url).filter(url => compareUrlsSet.has(url));
+  const intersectingUrls = baseUrls.filter(url => compareUrlsSet.has(url));
 
   /** @param {string} url @param {Array<LHCI.ServerCommand.Run>} runs */
   const getReport = (url, runs) => {
