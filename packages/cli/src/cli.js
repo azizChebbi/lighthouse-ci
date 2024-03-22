@@ -126,7 +126,7 @@ async function run() {
       break;
     }
     case 'wizard':
-      await wizardCmd.runCommand(argv);
+      await wizardCmd.runCommand(argv, mergeInCommandSpecificEnvironments(argv, 'upload'));
       break;
     case 'open':
       await openCmd.runCommand(argv);

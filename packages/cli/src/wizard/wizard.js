@@ -18,7 +18,18 @@ const fetch = require('../fetch.js');
  * @param {import('yargs').Argv} yargs
  */
 function buildCommand(yargs) {
-  return yargs;
+  return yargs.options({
+    'basicAuth.username': {
+      type: 'string',
+      description:
+        '[lhci only] The username to use on a server protected with HTTP Basic Authentication.',
+    },
+    'basicAuth.password': {
+      type: 'string',
+      description:
+        '[lhci only] The password to use on a server protected with HTTP Basic Authentication.',
+    },
+  });
 }
 
 /**
@@ -146,7 +157,7 @@ async function runResetTokenWizard(type, options) {
 }
 
 /**
- * @param {LHCI.WizardCommand.Options} options
+ * @param {LHCI.WizardCommand.Options & LHCI.UploadCommand.Options} options
  * @return {Promise<void>}
  */
 async function runCommand(options) {
