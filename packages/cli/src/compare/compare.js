@@ -83,21 +83,19 @@ async function runCommand(options) {
    */
   const compareRuns = await api.findCompareRuns(project.id);
 
-  if (!compareRuns) {
-    throw new Error('Could not find compare runs for the project');
-  }
-
-  /** @type {Array<LH.Result>} */
-  const compareLHRs = compareRuns.map(run => JSON.parse(run.lhr));
-  /** @type {Array<LH.Result>} */
-  const localLHRs = loadSavedLHRs().map(JSON.parse);
-
   let hasRegression = false;
-  for (const localLHR of localLHRs) {
-    for (const compareLHR of compareLHRs) {
-      if (localLHR.requestedUrl === compareLHR.requestedUrl) {
-        if (checkForRegressions(localLHR, compareLHR)) {
-          hasRegression = true;
+  if (compareRuns) {
+    /** @type {Array<LH.Result>} */
+    const compareLHRs = compareRuns.map(run => JSON.parse(run.lhr));
+    /** @type {Array<LH.Result>} */
+    const localLHRs = loadSavedLHRs().map(JSON.parse);
+
+    for (const localLHR of localLHRs) {
+      for (const compareLHR of compareLHRs) {
+        if (localLHR.requestedUrl === compareLHR.requestedUrl) {
+          if (checkForRegressions(localLHR, compareLHR)) {
+            hasRegression = true;
+          }
         }
       }
     }
