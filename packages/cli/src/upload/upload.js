@@ -274,7 +274,9 @@ async function runGithubStatusCheck(options, targetUrlMap) {
     /** @type {Array<LH.Result>} */
     const lhrs = loadSavedLHRs().map(lhr => JSON.parse(lhr));
     /** @type {Array<Array<[LH.Result, LH.Result]>>} */
-    const lhrsByUrl = _.groupBy(lhrs, lhr => lhr.finalDisplayedUrl).map(lhrs => lhrs.map(lhr => [lhr, lhr]));
+    const lhrsByUrl = _.groupBy(lhrs, lhr => lhr.finalDisplayedUrl).map(lhrs =>
+      lhrs.map(lhr => [lhr, lhr])
+    );
     const representativeLhrs = computeRepresentativeRuns(lhrsByUrl);
 
     if (!representativeLhrs.length) return print('No LHRs for status check, skipping.\n');
@@ -434,7 +436,7 @@ async function runLHCITarget(options) {
 
   for (const lhr of lhrs) {
     const parsedLHR = JSON.parse(lhr);
-    const url = getUrlForLhciTarget(parsedLHR.finalDisplayedUrl, options);
+    const url = getUrlForLhciTarget(parsedLHR.requestedUrl, options);
     const run = await api.createRun({
       projectId: project.id,
       buildId: build.id,
@@ -465,7 +467,9 @@ async function runTemporaryPublicStorageTarget(options) {
   /** @type {Array<LH.Result>} */
   const lhrs = loadSavedLHRs().map(lhr => JSON.parse(lhr));
   /** @type {Array<Array<[LH.Result, LH.Result]>>} */
-  const lhrsByUrl = _.groupBy(lhrs, lhr => lhr.finalDisplayedUrl).map(lhrs => lhrs.map(lhr => [lhr, lhr]));
+  const lhrsByUrl = _.groupBy(lhrs, lhr => lhr.finalDisplayedUrl).map(lhrs =>
+    lhrs.map(lhr => [lhr, lhr])
+  );
   const representativeLhrs = computeRepresentativeRuns(lhrsByUrl);
   const targetUrlMap = new Map();
 
@@ -483,7 +487,10 @@ async function runTemporaryPublicStorageTarget(options) {
 
       const {success, url} = await response.json();
       if (success && url) {
-        const urlReplaced = replaceUrlPatterns(lhr.finalDisplayedUrl, options.urlReplacementPatterns);
+        const urlReplaced = replaceUrlPatterns(
+          lhr.finalDisplayedUrl,
+          options.urlReplacementPatterns
+        );
         const urlToLinkTo = buildTemporaryStorageLink(url, urlReplaced, previousUrlMap);
         print(`success!\nOpen the report at ${urlToLinkTo}\n`);
         targetUrlMap.set(lhr.finalDisplayedUrl, url);
