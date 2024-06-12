@@ -1,4 +1,4 @@
-# Lighthouse CI Server (@lhci/server)
+# Lighthouse CI Server
 
 [![npm version](https://badge.fury.io/js/%40lhci%2Fserver.svg)](https://badge.fury.io/js/%40lhci%2Fserver)
 
@@ -9,3 +9,9 @@ The Lighthouse CI Server enables running a server to display Lighthouse CI resul
 ## Acronyms
 
 - CI: Continuous Integration
+
+
+## Feature
+
+- Generating separated Lighthouse reports for URLs, regardless if they are full URLs or # URLs (example: https://example.com/#/Dashboard).
+- Enhanced Developer experience by automating the selection process.
